@@ -133,12 +133,13 @@ react() {
     declare issue_id=$1 react_type=$2
     : ${issue_id:? You have to provide an issue number}
     react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r | wc -l)
-
-    if [[ $# -eq 0 ]]; then
-        echo "You did not provide issue number. By default, we are checking issue 89."
+    error_status=$?
+    if [[ $react_count = 0 ]]; then
+      echo "ERROR - There is no issue ${issue_id} in this repository"
+      return
     else echo "You will see the reactions of issue" ${issue_id}
     fi
-    echo
+
 
     echo "This issue with ID ${issue_id} currently has ${react_count} reactions."
     echo "Below is a list of the ${react_count} reactions related to this issue."
@@ -151,10 +152,3 @@ react() {
 }
 
 
-# ghub repos/lalyos-trainings/git-wed/issues/89/reactions
-
-
-# ghub repos/lalyos-trainings/git-wed/issues/89/reactions 
-# ghub repos/gaborslezak/test2forgabor/issues/1/reactions -s | jq .[].content -r
-
-# ghub repos/lalyos-trainings/git-wed/issues/comments/183795699/reactions -s | jq .[].content -r
