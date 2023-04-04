@@ -21,15 +21,15 @@ EOF
 }
 
 comment() {
-    set -x
+
   declare comment=$1 issuenumber=$2
-  ${issuenumber:=89}
+  : ${issuenumber:=89}
   : ${comment:? required}   
   #: ${issuenumber:? required} 
   json=$(comment-json "$@")
   
-  echo ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/comments -d "${json}"
- set +x
+  ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/comments -d "${json}"
+
 }
 
 
