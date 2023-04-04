@@ -199,7 +199,7 @@ react() {
     echo
     echo "Your reaction is:" ${react_type}
     echo
-    give_reaction ${react_type} ${issue_id} 1>gitresponse.txt 2>/dev/null
+    give_reaction ${react_type} ${issue_id} 1>>gitresponse.txt 2>/dev/null
 
     read -p "Would you like to see the list of reactions again?(Y/N)" answer
     while ! [[ $answer =~ [yYnN] ]]; do
