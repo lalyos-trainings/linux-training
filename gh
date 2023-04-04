@@ -182,7 +182,8 @@ reactions() {
     declare issue_id=$1 emoji=$2
 
     if ! [[ ${emoji} ]] ; then
-        print_emojis
+        # print_emojis
+        select_emojis
 
         read choice
 
@@ -192,13 +193,24 @@ reactions() {
         ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${emoji}'"}'
 
     fi
-
-    # : ${issue_id: print_emojis}
-
-    
     
     # ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/89/reactions -X POST -d '{"content": "'${my_choice}'"}'
     # ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${choice:-emoji}'"}'
+
+    # TODO gives a list and I can choose using its number
+
+}
+
+select_emojis() {
+    emoji_path=/home/robing/emojis.txt
+
+    select item in emoji_path; do
+        echo ${item}
+    done
+
+    # cat ${emoji_path} | while read line; do
+    #     echo ${line}
+    # done
 }
 
 print_emojis() {
