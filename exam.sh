@@ -117,5 +117,7 @@ comment_issue() {
 
 
 react() {
-    echo ghub repos/lalyos-trainings/git-wed/issues/89/reactions
+    default=89
+    issue_id=${1:-$default}
+    echo ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions
 }
