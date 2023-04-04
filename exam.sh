@@ -124,7 +124,13 @@ react() {
         echo "You did not provide issue number. By default, we are checking issue 89."
     else echo "You will see the reactions of issue" ${issue_id}
     fi
+    echo
+    echo "This issue has the following reactions:"
     ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r
+    echo
+    echo "Your reaction is:" ${react_type}
+    echo
+    give_reaction ${react_type} ${issue_id}
 }
 
 reaction-json() {
@@ -137,9 +143,9 @@ EOF
 
 
 give_reaction() {
-  declare reaction=$1
+  declare reaction=$1 issue_id=$2
   reaction=$(reaction-json "$@")
-  ghub repos/lalyos-trainings/git-wed/issues/89/reactions -d "${reaction}"
+  echo ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -d "${reaction}"
 }
 
 # ghub repos/lalyos-trainings/git-wed/issues/89/reactions
