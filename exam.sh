@@ -140,7 +140,6 @@ react() {
     else echo "You will see the reactions of issue" ${issue_id}
     fi
 
-
     echo "This issue with ID ${issue_id} currently has ${react_count} reactions."
     echo "Below is a list of the ${react_count} reactions related to this issue."
     ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r
@@ -149,6 +148,17 @@ react() {
     echo
     give_reaction ${react_type} ${issue_id}
 
+    read -p "Would you like to see the list of reactions again?(Y/N)" answer
+    while ! [[ $answer =~ [yYnN] ]]; do
+      read -p "Would you like to see the list of reactions again?(Y/N)" answer
+    done
+    if [[ $answer =~ [yY] ]]; then
+      react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r | wc -l)
+      ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r
+      echo "There are ${react_count} reactions related to issue ID ${issue_id}"
+      echo "The script is finished. Bye!"
+    else
+      echo "The script is finished. Bye!"
+    fi
+
 }
-
-
