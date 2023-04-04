@@ -33,7 +33,7 @@ passIss(){
 listReactions(){
     declare id=${1:-89}
 
-    ghub repos/lalyos-trainings/git-wed/issues/${id}/reactions | jq .[]
+    ghub repos/lalyos-trainings/git-wed/issues/${id}/reactions | jq .content
 
 
 }
