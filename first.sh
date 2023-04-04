@@ -196,6 +196,25 @@ issue-create() {
 }
 
 
+com-json() {
+    cat << EOF
+{
+  "body":"${1}"
+}
+EOF
+}
+
+add-comment() {
+    declare body=$1 id=${2:-89}
+    : ${body:? required}
+    echo ${body} ${id}
+    echo ${id}
+    comment=$(com-json "$@")
+    echo ${comment}
+    ghub repos/lalyos-trainings/git-wed/issues/${id}/comments -d "${comment}"
+}
+
+
 
 
 close-all() {
