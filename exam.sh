@@ -127,4 +127,25 @@ react() {
     ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r
 }
 
+reaction-json() {
+      cat <<EOF
+{
+  "content":"${1}"
+}
+EOF
+}
+
+
+give_reaction() {
+  declare reaction=$1
+  reaction=$(reaction-json "$@")
+  ghub repos/lalyos-trainings/git-wed/issues/89/reactions -d "${reaction}"
+}
+
 # ghub repos/lalyos-trainings/git-wed/issues/89/reactions
+
+
+# ghub repos/lalyos-trainings/git-wed/issues/89/reactions 
+# ghub repos/gaborslezak/test2forgabor/issues/1/reactions -s | jq .[].content -r
+
+# ghub repos/lalyos-trainings/git-wed/issues/comments/183795699/reactions -s | jq .[].content -r
