@@ -140,9 +140,12 @@ react() {
     else echo "You will see the reactions of issue" ${issue_id}
     fi
 
-
-    if [[ -z "$2" ]]; then
-
+    if [[ -n "$2" ]]; then
+      echo "You have given this reaction to the script: ${react_type}."
+      echo "If your reaction is not in the correct format, you will receive an error."
+      echo "You can check the error in gitresponse.txt."
+    else
+      PS3="Select your reaction:"
       options=("+1" "-1" "laugh" "confused" "heart" "hooray" "rocket" "eyes" "Quit")
 
       select reaction_t in ${options[@]}
@@ -195,10 +198,6 @@ react() {
           *) echo "invalid option $REPLY";;
         esac
       done
-    else 
-        echo "----------------------------------------------"
-        echo "TEST: WE NEED TO CHECK IF THE REACTION GIVEN BY THE USER IS CORRECT"
-        echo "----------------------------------------------"
     fi
     echo "This issue with ID ${issue_id} currently has ${react_count} reactions."
     echo "Below is a list of the ${react_count} reactions related to this issue."
