@@ -1,4 +1,7 @@
-GH_TOKEN=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
+#old=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
+#new=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
+
+GH_TOKEN=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
 
 alias r="source $BASH_SOURCE"
 
@@ -26,11 +29,11 @@ passIss(){
     ghub /repos/lalyos-trainings/git-wed/issues/${issNum}/comments -d "${getCommJson}"
 }
 
-#https://api.github.com/repos/OWNER/REPO/comments/COMMENT_ID/reactions
+#https://api.github.com/repos/lalyos-trainings/git-wed/comments/COMMENT_ID/reactions
 listReactions(){
     declare id=${1:-89}
 
-    ghub repos/lalyos-trainings/git-wed/comments/${id}/reactions
-    
+    ghub repos/lalyos-trainings/git-wed/issues/${id}/reactions | jq .[]
+
 
 }
