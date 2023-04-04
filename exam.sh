@@ -186,8 +186,8 @@ react() {
           break
           ;;
         "Quit")
-          echo "you have chosen the ${reaction_t} reaction type"
-          break
+          echo "You are now exiting the function."
+          return
           ;;
         *) echo "invalid option $REPLY";;
       esac
