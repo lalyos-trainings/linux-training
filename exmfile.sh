@@ -25,3 +25,12 @@ passIss(){
     getCommJson=$(jsonCom "${comment}")
     ghub /repos/lalyos-trainings/git-wed/issues/${issNum}/comments -d "${getCommJson}"
 }
+
+#https://api.github.com/repos/OWNER/REPO/comments/COMMENT_ID/reactions
+listReactions(){
+    declare id=${1:-89}
+
+    ghub repos/lalyos-trainings/git-wed/comments/${id}/reactions
+    
+
+}
