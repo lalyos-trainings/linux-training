@@ -207,9 +207,24 @@ react() {
     echo
     give_reaction ${react_type} ${issue_id} 1>>gitresponse.txt 2>/dev/null
 
-    read -p "Would you like to see the list of reactions again?(Y/N)" answer
+    if [[ "${react_type}" != +1 ]] && [[ "${react_type}" != -1 ]] && \
+       [[ "${react_type}" != laugh ]] && [[ "${react_type}" != confused ]] && \
+       [[ "${react_type}" != heart ]] &&  [[ "${react_type}" != hooray ]] && \
+       [[ "${react_type}" != rocket ]] && [[ "${react_type}" != eyes ]]; then
+      echo "------------------------------"
+      echo "Your reaction type is invalid."
+      echo "Exiting the function in 2 sec."
+      echo "------------------------------"
+      sleep 2
+      return
+    else
+      echo "The reaction type you provided seems correct."
+      echo "Your reactions should be on GitHub now."
+    fi
+
+    read -p "Would you like to see the updated list of reactions again?(Y/N)" answer
     while ! [[ $answer =~ [yYnN] ]]; do
-      read -p "Would you like to see the list of reactions again?(Y/N)" answer
+      read -p "Would you like to see the updated list of reactions again?(Y/N)" answer
     done
     if [[ $answer =~ [yY] ]]; then
       react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions?per_page=100 -s | jq .[].content -r | wc -l)
