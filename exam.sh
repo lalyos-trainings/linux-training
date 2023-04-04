@@ -145,7 +145,7 @@ EOF
 give_reaction() {
   declare reaction=$1 issue_id=$2
   reaction=$(reaction-json "$@")
-  echo ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -d "${reaction}"
+  ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -d "${reaction}"
 }
 
 # ghub repos/lalyos-trainings/git-wed/issues/89/reactions
