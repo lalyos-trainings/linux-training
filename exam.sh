@@ -21,16 +21,48 @@ EOF
 }
 
 comment() {
-  declare comment=$1 
-  #issuenumber=$2
-  ${issuenumber:='89'}
+    set -x
+  declare comment=$1 issuenumber=$2
+  ${issuenumber:=89}
   : ${comment:? required}   
-  : ${issuenumber:? required} 
+  #: ${issuenumber:? required} 
   json=$(comment-json "$@")
   
   echo ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/comments -d "${json}"
-
+ set +x
 }
+
+
+
+react-json() {
+  cat <<EOF
+{
+  "issuenumber":"${1:? issuenumber required}"
+ 
+}
+
+EOF
+}
+
+react() {
+  declare issuenumber=$1 reaction=$2
+  json=$(react-json "$@")
+
+  : ${issuenumber:? required} 
+    if [[ -z "$reaction" ]]; then
+    ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/reactions -d "${json}"
+    #$(ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/reactions -s) | jq .content -r
+
+    fi
+  #json=$(issue-json "$@")
+  #ghub repos/lalyos-trainings/git-wed/issues -d "${json}"
+}
+
+
+
+
+
+
 
 
 
@@ -50,20 +82,3 @@ comment() {
 #   json=$(issue-json "$@")
 #   ghub repos/lalyos-trainings/git-wed/issues -d "${json}"
 # }
-
-react-json() {
-  cat <<EOF
-{
-  "issuenumber":"${1:? issuenumber required}",
-  "reaction":"${2:? body required}"
-}
-EOF
-}
-
-react() {
-  declare issuenumber=$1 reaction=$2
-  : ${issuenumber:? required} 
-    
-  json=$(issue-json "$@")
-  ghub repos/lalyos-trainings/git-wed/issues -d "${json}"
-}
