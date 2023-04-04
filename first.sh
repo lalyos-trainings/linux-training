@@ -1,6 +1,17 @@
-post_comment(){
-  declare title=$1 body=$2
-  : ${title:? required} ${body:? required}
-  json=$(issue-json "$@")
-  ghub repos/lalyos-trainings/git-wed/issues/comments/1495894990/comments -X POST -d {"body":"test120"}'
+json_ketto() {
+  cat <<EOF
+{
+  "body":"${1:? body required}"
 }
+EOF
+}
+
+post_comment(){
+  declare numb=$2 body=$1
+  : ${numb:=89}
+  : ${body:? required}
+  json=$(json_ketto "${body}")
+  ghub /repos/lalyos-trainings/git-wed/issues/${numb}/comments -d "${json}"
+}
+
+ghub /repos/lalyos-trainings/git-wed/issues/89/comments -d '{"body":"test"}'
