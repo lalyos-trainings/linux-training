@@ -191,32 +191,31 @@ reactions() {
         read cont_prog
 
         if [[ ${cont_prog} = "y" ]]; then
-            break
+            next_step_load
+            break 2> /dev/null # NOT a useless break
         else
             echo BYE!
             return
         fi
 
     else    
-        echo Go to next step
-        for i in {1..3};do
-            sleep 0.5
-            echo -n .
-        done
-        break
+        # continues and "loads" -> simulates loading
+        next_step_load
     fi
 
 
-    if ! [[ ${emoji} ]] ; then
-        # print_emojis
-        select_emojis
+    if ! [[ ${emoji} ]]; then
 
+        echo Please select an emoji type.
+        select_emojis
         read choice
 
         ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${choice}'"}'
+        echo -e "\nEMOJI ADDED!"
 
     else
         ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${emoji}'"}'
+        echo -e "\nEMOJI ADDED!"
 
     fi
     
@@ -239,10 +238,25 @@ select_emojis() {
     done
 }
 
+next_step_load() {
+    echo -e "\n========="
+    echo -n "Go to next step"
+    for i in {1..3};do
+        sleep 0.2
+        echo -n .
+    done
+    echo -e "\n=========\n"
+
+}
+
 list_reactions_on_issue() {
     declare issue_id=$1 
 
+    echo -e "\n" # just printing a new line for clarity
+
     ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -s | jq .[].content -r 2> /dev/null
+
+    echo -e "\n"
 }
 
 print_emojis() {
