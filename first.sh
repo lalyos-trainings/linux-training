@@ -111,16 +111,6 @@ sleep_five () {
 
 
 
-ghub() {
-    declare path=$1
-    : ${path:? required}
-    shift
-    curl \
-      -H "Authorization: Bearer $GH_TOKEN" \
-      https://api.github.com/${path#/} \
-     "$@"
-}
-
 teams() {
   ghub /orgs/lalyos-trainings/teams -s \
     | jq .[].name -r
@@ -194,26 +184,6 @@ issue-create() {
   json=$(issue-json "$@")
   ghub repos/lalyos-trainings/git-wed/issues -d "${json}"
 }
-
-
-com-json() {
-    cat << EOF
-{
-  "body":"${1}"
-}
-EOF
-}
-
-add-comment() {
-    declare body=$1 id=${2:-89}
-    : ${body:? required}
-    echo ${body} ${id}
-    echo ${id}
-    comment=$(com-json "$@")
-    echo ${comment}
-    ghub repos/lalyos-trainings/git-wed/issues/${id}/comments -d "${comment}"
-}
-
 
 
 
