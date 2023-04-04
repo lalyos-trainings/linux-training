@@ -132,7 +132,7 @@ give_reaction() {
 react() {
     declare issue_id=$1 react_type=$2
     : ${issue_id:? You have to provide an issue number}
-    react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r | wc -l)
+    local react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r | wc -l)
     error_status=$?
     if [[ $react_count = 0 ]]; then
       echo "ERROR - There is no issue ${issue_id} in this repository"
