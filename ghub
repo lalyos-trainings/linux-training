@@ -57,6 +57,14 @@ issue-json2() {
 EOF
 }
 
+react-json() {
+        cat <<EOF
+    {
+        "content":"${2}"
+    }
+EOF
+}
+
 issue() {
     declare title=$1 body=$2
     : ${title:? required} ${body:? required}
@@ -72,7 +80,15 @@ ud-issue() {
 }
 
 react() {
-    declare issue=$1
+    declare issue=$1 reaction=$2
     : ${issue:? required}
-    ghub repos/lalyos-trainings/git-wed/issues/${ISSUE:-89}/reactions -s | jq .[].content -r
+    json=$(react-json "$@")
+    if [[ ! -z ${reaction} ]]; then
+        ghub repos/lalyos-trainings/git-wed/issues/${ISSUE:-89}/reactions \
+         -d "${json}"
+    else
+        ghub repos/lalyos-trainings/git-wed/issues/${ISSUE:-89}/reactions \
+         -s | jq .[].content -r
+    fi
+    
 }
