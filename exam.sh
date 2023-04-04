@@ -132,6 +132,13 @@ give_reaction() {
 react() {
     declare issue_id=$1 react_type=$2
     : ${issue_id:? You have to provide an issue number}
+
+    if [[ -z "$2" ]]; then
+      echo EMPTY
+      return
+    else echo $react_type
+    fi
+
     local react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions?per_page=100 -s | jq .[].content -r | wc -l)
     error_status=$?
     if [[ $react_count = 0 ]]; then
