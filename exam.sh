@@ -140,10 +140,49 @@ react() {
     else echo "You will see the reactions of issue" ${issue_id}
     fi
 
-    select reaction_t in +1 -1 laugh confused heart hooray rocket eyes
+    options=("+1" "-1" "laugh" "confused" "heart" "hooray" "rocket" "eyes" "Quit")
+
+    select reaction_t in ${options[@]}
     do
-    echo "you have chosen ${reaction_t}"
-    break
+      case $reaction_t in
+        "+1")
+          echo "you have chosen the ${reaction_t} reaction type"
+          break
+          ;;
+        "-1")
+          echo "you have chosen the ${reaction_t} reaction type"
+          break
+          ;;
+        "laugh")
+          echo "you have chosen the ${reaction_t} reaction type"
+          break
+          ;;
+        "confused")
+          echo "you have chosen the ${reaction_t} reaction type"
+          break
+          ;;
+        "heart")
+          echo "you have chosen the ${reaction_t} reaction type"
+          break
+          ;;
+        "hooray")
+          echo "you have chosen the ${reaction_t} reaction type"
+          break
+          ;;
+        "rocket")
+          echo "you have chosen the ${reaction_t} reaction type"
+          break
+          ;;
+        "eyes")
+          echo "you have chosen the ${reaction_t} reaction type"
+          break
+          ;;
+        "Quit")
+          echo "you have chosen the ${reaction_t} reaction type"
+          break
+          ;;
+        *) echo "invalid option $REPLY";;
+      esac
     done
 
     echo "This issue with ID ${issue_id} currently has ${react_count} reactions."
