@@ -20,8 +20,8 @@ EOF
 }
 
 add-comment() {
-  declare issue_number=$1 comment_body=$2
-  : ${issue_number:? required} ${comment_body:? required}
+  declare comment_body=$1 issue_number=${2:-89}
+  : ${comment_body:? required}
 
   json=$(comment-json "${comment_body}")
   ghub repos/lalyos-trainings/git-wed/issues/${issue_number}/comments \
