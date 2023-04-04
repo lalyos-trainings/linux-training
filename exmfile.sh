@@ -30,10 +30,13 @@ passIss(){
 }
 
 #https://api.github.com/repos/lalyos-trainings/git-wed/comments/COMMENT_ID/reactions
+
+# listReactions 89 valami
+# ha már van: +1, -1, új: laugh, confused, heart, hooray, rocket, eyes
 listReactions(){
     declare id=${1:-89}
 
-    ghub repos/lalyos-trainings/git-wed/issues/${id}/reactions | jq .content
+    ghub repos/lalyos-trainings/git-wed/issues/${id}/reactions -s | jq .[]
 
 
 }
