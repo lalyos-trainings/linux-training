@@ -132,7 +132,7 @@ give_reaction() {
 react() {
     declare issue_id=$1 react_type=$2
     : ${issue_id:? You have to provide an issue number}
-    local react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r | wc -l)
+    local react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions?per_page=100 -s | jq .[].content -r | wc -l)
     error_status=$?
     if [[ $react_count = 0 ]]; then
       echo "ERROR - There is no issue ${issue_id} in this repository"
@@ -206,7 +206,7 @@ react() {
       read -p "Would you like to see the list of reactions again?(Y/N)" answer
     done
     if [[ $answer =~ [yY] ]]; then
-      react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r | wc -l)
+      react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions?per_page=100 -s | jq .[].content -r | wc -l)
       ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r
       echo "There are ${react_count} reactions related to issue ID ${issue_id}"
       echo "The script is finished. Bye!"
