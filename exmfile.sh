@@ -1,9 +1,10 @@
 #old=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
 #new=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
-
 #old=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
+# GH_TOKEN=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
 
-GH_TOKEN=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
+#too much Bad Credential miatt!
+GH_TOKEN=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
 
 alias r="source $BASH_SOURCE"
 
@@ -37,19 +38,33 @@ passIss(){
     ghub /repos/lalyos-trainings/git-wed/issues/${issNum}/comments -d "${getCommJson}"
 }
 
-#https://api.github.com/repos/lalyos-trainings/git-wed/comments/COMMENT_ID/reactions
-
-# listReactions 89 valami
 # ha már van: +1, -1, új: laugh, confused, heart, hooray, rocket, eyes
 listReactions(){
-    declare id=${1:-89}
     # ha nincs id írja ko hogy kötelező!
+    declare id=${1:? required}
 
-    #ghub repos/lalyos-trainings/git-wed/issues/${id}/reactions -s | jq .[].content # ki kell listáznia!
-    if [ $2  ];then 
-        contenJson=$(addReaction "$2")
-        #ghub repos/lalyos-trainings/git-wed/issues/${id}/reactions -d "${contenJson}"
-    fi
+    # default emo value a -1 (not like)
+    declare emo=${2:-"-1"} 
 
+    echo $(getreactions "$id")
 
+    printf '%12s\n' "ALL REACTIONS"
+
+    cat emos.sh | while read reactions; do  
+        echo ${reactions}
+    done
+
+    echo $(postReaction "$id" "$emo") 
+
+}
+
+getreactions(){
+    # listáza ki
+    ghub repos/lalyos-trainings/git-wed/issues/$1/reactions -s | jq .[].content > emos.sh
+}
+
+postReaction(){
+    #adja hozzá az emo-t
+    contenJson=$(addReaction "$2")
+    ghub repos/lalyos-trainings/git-wed/issues/$1/reactions -d "${contenJson}" -s | jq .[] > /dev/null
 }
