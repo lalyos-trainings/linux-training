@@ -123,7 +123,7 @@ react() {
         echo "You did not provide issue number. By default, we are checking issue 89."
     else echo "You will see the reactions of issue" ${issue_id}
     fi
-    echo ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions
+    ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions | jq .[].content
 }
 
 # ghub repos/lalyos-trainings/git-wed/issues/89/reactions
