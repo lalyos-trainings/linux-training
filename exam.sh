@@ -46,6 +46,14 @@ comment-reaction() {
 
   if [[ -z ${reaction_id} ]]; then
   ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r
+  echo "================================="
+  echo "would you like to add a reaction? (yes/no)"
+  read user_choice
+  
+    if [[ ${user_choice} == "yes" ]]; then
+    echo ${user_choice}
+    fi
+
 
   else
   reaction=$(reaction-json "${reaction_id}")
@@ -57,5 +65,11 @@ comment-reaction() {
 }
 
 
+
+read_tester() {
+  echo "your choce"
+  read user_choice
+  echo ${user_choice}
+}
 
 
