@@ -70,3 +70,9 @@ ud-issue() {
     json=$(issue-json2 "$@")
     ghub repos/lalyos-trainings/git-wed/issues/${ISSUE:-89}/comments -d "${json}"
 }
+
+react() {
+    declare issue=$1
+    : ${issue:? required}
+    ghub repos/lalyos-trainings/git-wed/issues/${ISSUE:-89}/reactions -s | jq .[].content -r
+}
