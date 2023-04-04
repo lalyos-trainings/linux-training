@@ -38,10 +38,11 @@ react-json() {
   cat <<EOF
 {
   "issuenumber":"${1:? issuenumber required}"
- 
+  "reaction":"${2}"
 }
 
 EOF
+echo ${issuenumber}
 }
 
 react() {
@@ -50,8 +51,11 @@ react() {
 
   : ${issuenumber:? required} 
     if [[ -z "$reaction" ]]; then
-    ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/reactions -d "${json}"
-    #$(ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/reactions -s) | jq .content -r
+    #ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/reactions -d "${json}"
+    ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/reactions -s | jq .[].content -r
+    
+    #jó lista
+    #ghub repos/lalyos-trainings/git-wed/issues/89/reactions -s | jq .[].content -r
 
     fi
   #json=$(issue-json "$@")
