@@ -208,6 +208,8 @@ reactions() {
 
         echo Please select an emoji type.
         select_emojis
+
+        return # TEMP RETURN
         read choice
 
         ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${choice}'"}'
@@ -229,13 +231,19 @@ reactions() {
 select_emojis() {
     emoji_path=/home/robing/emojis.txt
 
-    # select item in emoji_path; do
-    #     echo ${item}
-    # done
+    # CREATE AN ARRAY
+    items=()
+    while read -r line;
+    do
+        items+=(${line})
+        # echo added ${line}
+    done < ${emoji_path}
 
-    cat ${emoji_path} | while read line; do
-        echo ${line}
-    done
+    echo ${items[0]}
+
+    # cat ${emoji_path} | while read line; do
+    #     echo ${line}
+    # done
 }
 
 next_step_load() {
