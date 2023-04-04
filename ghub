@@ -1,0 +1,72 @@
+#!/bin/bash
+alias r="source $BASH_SOURCE"
+
+
+ghub() {
+    declare path=$1
+    : ${path:? required}
+    shift
+    curl \
+      -H "Authorization: Bearer $GH_TOKEN" \
+      https://api.github.com/${path#/} \
+     "$@"
+}
+
+teams() {
+  ghub /orgs/lalyos-trainings/teams -s \
+    | jq .[].name -r
+}
+
+devs() {
+  ghub /organizations/2652852/team/7635002/members -s \
+    | jq .[].login -r
+}
+
+names() {
+    devs > devs.txt
+    printf "%-20s %s \n" LOGIN NAME
+    cat devs.txt | while read name; do
+        fullname=$(ghub users/$name -s | jq .name -r)
+        printf "%-20s %s \n" $name "$fullname"
+    done
+}
+
+issues() {
+    ghub /repos/lalyos-trainings/git-wed/issues -s | jq .[] -c \
+    | while read order; do
+        user=$(echo $order | jq .user.login)
+        food=$(echo $order | jq .body)
+        printf '%-15s %-15s\n' $user $food
+    done
+}
+
+issue-json() {
+        cat <<EOF
+        {
+            "title":"${1}",
+            "body":"${2}"
+        }
+EOF
+}
+
+issue-json2() {
+    cat <<EOF
+    {
+        "body":"${1}"
+    }
+EOF
+}
+
+issue() {
+    declare title=$1 body=$2
+    : ${title:? required} ${body:? required}
+    json=$(issue-json "$@")
+    ghub /repos/lalyos-trainings/git-wed/issues -d "${json}"
+}
+
+ud-issue() {
+    declare body=$1 
+    : ${body:? required} 
+    json=$(issue-json2 "$@")
+    ghub repos/lalyos-trainings/git-wed/issues/${ISSUE:-89}/comments -d "${json}"
+}
