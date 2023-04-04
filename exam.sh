@@ -31,6 +31,31 @@ add-comment() {
 # ha nem kap parametert akkor issue number közelező
 # második paraméter nincs meg akkor listáz
 # ha megad reactiont, akkor rárakja
+reaction-json() {
+    cat << EOF
+{
+  "content":"${1}"
+}
+EOF
+}
+
+comment-reaction() {
+  declare issue_id=$1 reaction_id=$2 
+  : ${issue_id:? required}
+
+
+  if [[ -z ${reaction_id} ]]; then
+  ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r
+
+  else
+  reaction=$(reaction-json "${reaction_id}")
+  echo ${reaction}
+  ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -d "${reaction}"
+
+  fi
+
+}
+
 
 
 
