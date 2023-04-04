@@ -132,13 +132,6 @@ give_reaction() {
 react() {
     declare issue_id=$1 react_type=$2
     : ${issue_id:? You have to provide an issue number}
-
-    if [[ -z "$2" ]]; then
-      echo EMPTY
-      return
-    else echo $react_type
-    fi
-
     local react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions?per_page=100 -s | jq .[].content -r | wc -l)
     error_status=$?
     if [[ $react_count = 0 ]]; then
@@ -147,59 +140,66 @@ react() {
     else echo "You will see the reactions of issue" ${issue_id}
     fi
 
-    options=("+1" "-1" "laugh" "confused" "heart" "hooray" "rocket" "eyes" "Quit")
 
-    select reaction_t in ${options[@]}
-    do
-      case $reaction_t in
-        "+1")
-          echo "you have chosen the ${reaction_t} reaction type"
-          react_type=${reaction_t}
-          break
-          ;;
-        "-1")
-          echo "you have chosen the ${reaction_t} reaction type"
-          react_type=${reaction_t}
-          break
-          ;;
-        "laugh")
-          echo "you have chosen the ${reaction_t} reaction type"
-          react_type=${reaction_t}
-          break
-          ;;
-        "confused")
-          echo "you have chosen the ${reaction_t} reaction type"
-          react_type=${reaction_t}
-          break
-          ;;
-        "heart")
-          echo "you have chosen the ${reaction_t} reaction type"
-          react_type=${reaction_t}
-          break
-          ;;
-        "hooray")
-          echo "you have chosen the ${reaction_t} reaction type"
-          react_type=${reaction_t}
-          break
-          ;;
-        "rocket")
-          echo "you have chosen the ${reaction_t} reaction type"
-          react_type=${reaction_t}
-          break
-          ;;
-        "eyes")
-          echo "you have chosen the ${reaction_t} reaction type"
-          react_type=${reaction_t}
-          break
-          ;;
-        "Quit")
-          echo "You are now exiting the function."
-          return
-          ;;
-        *) echo "invalid option $REPLY";;
-      esac
-    done
+    if [[ -z "$2" ]]; then
 
+      options=("+1" "-1" "laugh" "confused" "heart" "hooray" "rocket" "eyes" "Quit")
+
+      select reaction_t in ${options[@]}
+      do
+        case $reaction_t in
+          "+1")
+            echo "you have chosen the ${reaction_t} reaction type"
+            react_type=${reaction_t}
+            break
+            ;;
+          "-1")
+            echo "you have chosen the ${reaction_t} reaction type"
+            react_type=${reaction_t}
+            break
+            ;;
+          "laugh")
+            echo "you have chosen the ${reaction_t} reaction type"
+            react_type=${reaction_t}
+            break
+            ;;
+          "confused")
+            echo "you have chosen the ${reaction_t} reaction type"
+            react_type=${reaction_t}
+            break
+            ;;
+          "heart")
+            echo "you have chosen the ${reaction_t} reaction type"
+            react_type=${reaction_t}
+            break
+            ;;
+          "hooray")
+            echo "you have chosen the ${reaction_t} reaction type"
+            react_type=${reaction_t}
+            break
+            ;;
+          "rocket")
+            echo "you have chosen the ${reaction_t} reaction type"
+            react_type=${reaction_t}
+            break
+            ;;
+          "eyes")
+            echo "you have chosen the ${reaction_t} reaction type"
+            react_type=${reaction_t}
+            break
+            ;;
+          "Quit")
+            echo "You are now exiting the function."
+            return
+            ;;
+          *) echo "invalid option $REPLY";;
+        esac
+      done
+    else 
+        echo "----------------------------------------------"
+        echo "TEST: WE NEED TO CHECK IF THE REACTION GIVEN BY THE USER IS CORRECT"
+        echo "----------------------------------------------"
+    fi
     echo "This issue with ID ${issue_id} currently has ${react_count} reactions."
     echo "Below is a list of the ${react_count} reactions related to this issue."
     ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r
