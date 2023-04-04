@@ -147,34 +147,42 @@ react() {
       case $reaction_t in
         "+1")
           echo "you have chosen the ${reaction_t} reaction type"
+          react_type=${reaction_t}
           break
           ;;
         "-1")
           echo "you have chosen the ${reaction_t} reaction type"
+          react_type=${reaction_t}
           break
           ;;
         "laugh")
           echo "you have chosen the ${reaction_t} reaction type"
+          react_type=${reaction_t}
           break
           ;;
         "confused")
           echo "you have chosen the ${reaction_t} reaction type"
+          react_type=${reaction_t}
           break
           ;;
         "heart")
           echo "you have chosen the ${reaction_t} reaction type"
+          react_type=${reaction_t}
           break
           ;;
         "hooray")
           echo "you have chosen the ${reaction_t} reaction type"
+          react_type=${reaction_t}
           break
           ;;
         "rocket")
           echo "you have chosen the ${reaction_t} reaction type"
+          react_type=${reaction_t}
           break
           ;;
         "eyes")
           echo "you have chosen the ${reaction_t} reaction type"
+          react_type=${reaction_t}
           break
           ;;
         "Quit")
