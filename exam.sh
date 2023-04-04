@@ -120,17 +120,22 @@ react() {
     default=89
     issue_id=${1:-$default}
     react_type=${2}
+    react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r | wc -l)
+
     if [[ $# -eq 0 ]]; then
         echo "You did not provide issue number. By default, we are checking issue 89."
     else echo "You will see the reactions of issue" ${issue_id}
     fi
     echo
-    echo "This issue has the following reactions:"
+
+    echo "This issue with ID ${issue_id} currently has ${react_count} reactions."
+    echo "Below is a list of the ${react_count} reactions related to this issue."
     ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r
     echo
     echo "Your reaction is:" ${react_type}
     echo
     give_reaction ${react_type} ${issue_id}
+
 }
 
 reaction-json() {
