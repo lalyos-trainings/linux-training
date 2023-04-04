@@ -1,0 +1,65 @@
+#!/bin/bash
+alias r="source $BASH_SOURCE"
+
+
+ghub() {
+    declare path=$1
+    : ${path:? required}
+    shift
+    curl \
+      -H "Authorization: Bearer $GH_TOKEN" \
+      https://api.github.com/${path#/} \
+     "$@"
+}
+
+teams() {
+  ghub /orgs/lalyos-trainings/teams -s \
+    | jq .[].name -r
+}
+
+table() {
+  printf '%20s %20s\n' "LOGIN" "FULL_NAME"
+  devs | while read name; do
+    real=$(ghub /users/${name} -s | jq .name -r)
+    printf '%20s %20s\n'  ${name} "${real}"
+  done
+}
+
+issue-json() {
+  cat <<EOF
+  {
+    "title":"${1}",
+    "body":"${2}"
+  }
+EOF
+}
+
+issue() {
+  declare title=$1 body=$2
+  : ${title:? required} ${body:? required}
+
+  json=$(issue-json "$@")
+  ghub repos/lalyos-trainings/git-wed/issues -d "${json}"
+}
+
+close-all() {
+  ghub repos/lalyos-trainings/git-wed/issues -s | jq .[].number | while read issue; do 
+    echo === closing issue: ${issue}
+    ghub repos/lalyos-trainings/git-wed/issues/${issue} -X PATCH -d '{"state":"closed"}' &> /dev/null &
+  done
+
+}
+
+lunch() {
+  ghub repos/lalyos-trainings/git-wed/issues -s | jq .[] -c \
+  | while read order; do
+    user=$(echo $order | jq .user.login -r)
+    food=$(echo $order | jq .body -r)
+    printf '%-15s %-15s %s\n' $user $food
+  done
+}
+
+devs() {
+  ghub /organizations/2652852/team/7635002/members -s \
+    | jq .[].login -r
+}
