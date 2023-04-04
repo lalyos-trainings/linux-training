@@ -115,11 +115,23 @@ comment_issue() {
 # ha megadja az issuet és nem ad meg reactet, akkor listázza ki az adott issure való reactionoket
 # ha mindkettő megadja, akkor rárak egy reactet
 
+reaction-json() {
+      cat <<EOF
+{
+  "content":"${1}"
+}
+EOF
+}
+
+give_reaction() {
+  declare reaction=$1 issue_id=$2
+  reaction=$(reaction-json "$@")
+  ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -d "${reaction}"
+}
 
 react() {
-    default=89
-    issue_id=${1:-$default}
-    react_type=${2}
+    declare issue_id=$1 react_type=$2
+    : ${issue_id:? You have to provide an issue number}
     react_count=$(ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r | wc -l)
 
     if [[ $# -eq 0 ]]; then
@@ -138,20 +150,6 @@ react() {
 
 }
 
-reaction-json() {
-      cat <<EOF
-{
-  "content":"${1}"
-}
-EOF
-}
-
-
-give_reaction() {
-  declare reaction=$1 issue_id=$2
-  reaction=$(reaction-json "$@")
-  ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -d "${reaction}"
-}
 
 # ghub repos/lalyos-trainings/git-wed/issues/89/reactions
 
