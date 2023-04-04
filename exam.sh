@@ -101,12 +101,12 @@ EOF
 }
 
 comment_issue() {
-    declare text=$1 #comment_id=${2:=89} 
+    declare text=$1
     default=89
-    comment_id=${2:-$default}
+    issue_id=${2:-$default}
     : ${text:? required}
     comment=$(comment "$@")
-    ghub repos/lalyos-trainings/git-wed/issues/${comment_id}/comments -d "${comment}"
+    ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/comments -d "${comment}"
 }
 
 
@@ -116,6 +116,6 @@ comment_issue() {
 # ha mindkettő megadja, akkor rárak egy reactet
 
 
-# react() {
-#     todo
-# }
+react() {
+    echo ghub repos/lalyos-trainings/git-wed/issues/89/reactions
+}
