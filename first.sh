@@ -14,3 +14,14 @@ comment(){
  com=$(comment_json "${mess_id}")
  ghub repos/lalyos-trainings/git-wed/issues/89/comments -d "${com}"
 }
+react (){
+    declare issue=${1:-89}
+    declare reaction=${2:- "no reaction"} 
+: ${issue:? required} ${reaction:? required}
+if (issue="required" && reaction="required"); then
+  echo issue: ${issue}
+fi 
+
+
+
+}
