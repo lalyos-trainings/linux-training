@@ -4,7 +4,7 @@ alias r="source $BASH_SOURCE"
 ghub() {
   declare path=$1
   : ${path:? required}
-    shift
+    shift    
     curl \
       -H "Authorization: Bearer $GH_TOKEN" \
       https://api.github.com/${path#/} \
@@ -28,36 +28,43 @@ comment() {
   #: ${issuenumber:? required} 
   json=$(comment-json "$@")
   
-  ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/comments -d "${json}"
+  echo ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/comments -d "${json}"
 
 }
 
-
+#"issuenumber":"${1:? issuenumber required}"
 
 react-json() {
   cat <<EOF
-{
-  "issuenumber":"${1:? issuenumber required}"
-  "reaction":"${2}"
+{ 
+  "content":"${2}"
 }
 
 EOF
-echo ${issuenumber}
+#echo ${issuenumber}
 }
 
 react() {
   declare issuenumber=$1 reaction=$2
   json=$(react-json "$@")
-
+#echo $json
   : ${issuenumber:? required} 
-    if [[ -z "$reaction" ]]; then
-    #ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/reactions -d "${json}"
+
+  if [[ -z "$reaction" ]]; then
+    
     ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/reactions -s | jq .[].content -r
     
+    else 
+    
+    ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/reactions -d "${json}"
+
+  fi
+    
+    #ghub repos/lalyos-trainings/git-wed/issues/"$issuenumber"/reactions -d "${json}"
+
     #jó lista
     #ghub repos/lalyos-trainings/git-wed/issues/89/reactions -s | jq .[].content -r
 
-    fi
   #json=$(issue-json "$@")
   #ghub repos/lalyos-trainings/git-wed/issues -d "${json}"
 }
