@@ -1,0 +1,219 @@
+#!/bin/bash
+alias r='source $BASH_SOURCE'
+echo GH SOURCED!
+
+ghub() {
+    declare path=$1
+    : ${path:? required}
+    shift # shits the first parameter. insterted path separately and inserts the rest fi there is ny
+    curl \
+        -H "Authorization: token $GH_TOKEN" \
+        https://api.github.com/${path#/} \
+        "$@"
+}
+
+teams() {
+    ghub /orgs/lalyos-trainings/teams -s |
+        jq .[].name -r # -r = raw
+}
+
+devs() {
+    ghub /organizations/2652852/team/7635002/members -s |
+        jq .[].login -r
+}
+
+show_name_login() {
+    printf '%20s %20s' "LOGIN" "NAME"
+    for i in {1..2}; do
+        echo
+    done
+
+    cat devs.txt | while read name; do
+        real=$(ghub /users/$name -s | jq .name -r)
+        printf '%20s %20s\n' "${name}" "${real}"
+    done
+}
+
+show_name_order() {
+
+    devs | while read name order; do
+        real=$(ghub /users/$name -s | jq .name -r)
+        myorder=$(ghub /users/$name -s | jq .order -r)
+        printf "name: %15s, order: %15s\n" "${real} ${myorder}"
+    done
+}
+
+# ghub /users/McLoad6 | jq .[].name
+#  cat devs.txt | while read name; do echo $name; done
+# ghub /users | jq .[].login -r
+
+# cat devs.txt | while read name; do echo $name; read ghub /users | jq .[].login -r; done
+# ghub /users/8Klaro8 | jq .name
+
+# DONE
+# cat devs.txt | while read name; do echo $name; ghub /users/$name -s | jq .name -r; echo ; done
+
+# ISSES API
+# https://api.github.com/repos/lalyos/
+# ghub repos/lalyos/git-wed/issues
+# ghub repos/lalyos/git-wed/issues -s | jq .[].body -r
+
+# while read food; do echo $food; ghub repos/lalyos/git-wed/issues -s | jq .[].body -r; done
+
+show_name_food() {
+
+    ghub repos/lalyos-trainings/git-wed/issues -s | jq .[] -c | while read order; do
+        user=$(echo $order | jq .user.login -r)
+        food=$(echo $order | jq .body -r)
+        printf "%40s %40s\n" "${food} ${user}"
+    done
+}
+
+#   https://api.github.com/repos/OWNER/REPO/issues \
+#   -d '{"title":"Found a bug","body":"I'
+
+post_issue() {
+    declare title=$1 body=$2
+    : ${title:? required} ${body:? required}
+
+    echo '{"title": "'$title'", "body": "'$body'"}'
+
+    # ghub repos/lalyos-trainings/git-wed/issues \
+    # -d '{"title": "$(title)", "body": "$(body)"}'
+
+    echo todo...
+}
+
+close-all() {
+    ghub repos/lalyos-trainings/git-wed/issues -s | jq .[].number | while read issue; do
+        echo === closing issue: ${issue}
+        ghub repos/lalyos-trainings/git-wed/issues/${issue} -X PATCH -d '{"state":"closed"}' &>/dev/null & # -> put to background
+    done
+
+}
+
+issue-json() {
+    cat <<EOF
+{
+  "title":"${1:? title required}",
+  "body":"${2:? body required}"
+}
+EOF
+}
+
+issue() {
+    declare title=$1 body=$2
+    : ${title:? required} ${body:? required}
+
+    echo arg nums: $#
+    if [[ $# -gt 2 ]]; then
+        echo too many args ... consider using quotation
+        return
+    fi
+
+    json=$(issue-json "$@") # "$title" "$body"
+    ghub repos/lalyos-trainings/git-wed/issues -d "${json}"
+}
+
+# coffe-break-for-robin
+
+coffee-issue() {
+    declare title=$1 body=$2
+
+    my_json=$(
+        cat <<EOF
+{
+  "title":"${1:? title required}",
+  "body":"${2:? body required}"
+}
+EOF
+    )
+
+    ghub repos/lalyos-trainings/git-wed/issues -d "${my_json}"
+}
+
+# post_comment_to_issue() {
+#     # https://github.com/lalyos-trainings/git-wed/issues/89/comments
+#     ghub https://api.github.com/repos/OWNER/REPO/issues/comments/COMMENT_ID \
+#         -d '{"body":"Me too"}'
+
+# }
+
+post_comment_to_issue() {
+    declare comment_id=$1 comment=$2
+
+    default_id="89"
+    default_comment="def_comm"
+
+    #     my_json=$(
+    #         cat <<EOF
+    # {
+    #   "comment_id":"${1:? comment_id required}",
+    #   "comment":"${2:? comment required}"
+    # }
+    # EOF
+    # )
+
+    # POST NEW COMMENT
+    ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${comment_id:-$default_id}/comments -X POST -d '{"body":"'${comment:-$default_comment}'"}'
+}
+
+update_comment_title() {
+    declare comment_id=$1 comment=$2
+
+    default_id="89"
+    default_comment="def_comm"
+
+        my_json=$(
+        cat <<EOF
+{
+  "body":"${2:? comment required}"
+}
+EOF
+    )
+
+    echo ${my_json}
+    # UPDATE COMMENT TITLE
+    ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${comment_id:-default_id} -X PATCH -d "${my_json}"}
+}
+
+# REACT ISSUE
+reach() {
+    declare issue_id=$1 emoji=$2
+
+    if ! emoji ; then
+        print_emojis
+    fi
+
+    : ${issue_id: required}
+
+
+    my_choice=$(read choice)
+    
+    # ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/89/reactions -X POST -d '{"content": "'${my_choice}'"}'
+    ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/89/reactions -X POST -d '{"content": "heart"}'
+}
+
+print_emojis() {
+    echo type one of these:
+    echo +1
+    echo -1
+    echo laugh
+    echo confused
+    echo heart
+    echo hooray
+    echo rocket
+    echo eyes
+
+
+}
+
+#
+# patch close
+
+# ghub repos/lalyos-trainings/git-wed/issues/${issue} -X PATCH -d '{"state":"closed"}'
+
+# post_issue() {
+
+#     ghub repos/lalyos-trainings/git-wed/issues -d '{"title":"coffee", "body":"cappucino"}'
+# }
