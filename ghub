@@ -72,7 +72,7 @@ issue() {
     ghub /repos/lalyos-trainings/git-wed/issues -d "${json}"
 }
 
-ud-issue() {
+add-comment() {
     declare body=$1 
     : ${body:? required} 
     json=$(issue-json2 "$@")
@@ -80,15 +80,14 @@ ud-issue() {
 }
 
 react() {
-    declare issue=$1 reaction=$2
+    declare issue=$1 $2
     : ${issue:? required}
     json=$(react-json "$@")
-    if [[ ! -z ${reaction} ]]; then
-        ghub repos/lalyos-trainings/git-wed/issues/${ISSUE:-89}/reactions \
+    if [[ ! -z ${2} ]]; then
+        ghub repos/lalyos-trainings/git-wed/issues/${issue}/reactions \
          -d "${json}"
     else
-        ghub repos/lalyos-trainings/git-wed/issues/${ISSUE:-89}/reactions \
+        ghub repos/lalyos-trainings/git-wed/issues/${issue}/reactions \
          -s | jq .[].content -r
     fi
-    
 }
