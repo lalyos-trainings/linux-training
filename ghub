@@ -79,6 +79,14 @@ add-comment() {
     ghub repos/lalyos-trainings/git-wed/issues/${ISSUE:-89}/comments -d "${json}"
 }
 
+react-json-emoji() {
+        cat <<EOF
+    {
+        "content":"${emoji}"
+    }
+EOF
+}
+
 react() {
     declare issue=$1 $2
     : ${issue:? required}
@@ -87,7 +95,14 @@ react() {
         ghub repos/lalyos-trainings/git-wed/issues/${issue}/reactions \
          -d "${json}"
     else
+        select emoji in $(cat emojis); do
+        break
+        done
+        json=$(react-json-emoji "$@")
         ghub repos/lalyos-trainings/git-wed/issues/${issue}/reactions \
-         -s | jq .[].content -r
+         -d "${json}"
+
+       # ghub repos/lalyos-trainings/git-wed/issues/${issue}/reactions \
+        # -s | jq .[].content -r
     fi
 }
