@@ -181,6 +181,32 @@ EOF
 reactions() {
     declare issue_id=$1 emoji=$2
 
+    echo Do you want to check issue\'s emojis "(y/n)"?
+    read check_emojis
+
+    if [[ "${check_emojis}" = "y" ]]; then
+        list_reactions_on_issue
+
+        echo Continue program "(y/n)"?
+        read cont_prog
+
+        if [[ ${cont_prog} = "y" ]]; then
+            break
+        else
+            echo BYE!
+            return
+        fi
+
+    else    
+        echo Go to next step
+        for i in {1..3};do
+            sleep 0.5
+            echo -n .
+        done
+        break
+    fi
+
+
     if ! [[ ${emoji} ]] ; then
         # print_emojis
         select_emojis
@@ -204,13 +230,19 @@ reactions() {
 select_emojis() {
     emoji_path=/home/robing/emojis.txt
 
-    select item in emoji_path; do
-        echo ${item}
-    done
-
-    # cat ${emoji_path} | while read line; do
-    #     echo ${line}
+    # select item in emoji_path; do
+    #     echo ${item}
     # done
+
+    cat ${emoji_path} | while read line; do
+        echo ${line}
+    done
+}
+
+list_reactions_on_issue() {
+    declare issue_id=$1 
+
+    ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -s | jq .[].content -r 2> /dev/null
 }
 
 print_emojis() {
