@@ -52,6 +52,18 @@ comment-reaction() {
   
     if [[ ${user_choice} == "yes" ]]; then
     echo ${user_choice}
+    select chosen_emoji in +1 -1 laugh confused heart hooray rocket eyes
+    do
+    echo ${chosen_emoji}
+    echo "would you like to react again? (yes/no)"
+    read user_choice_2
+      if [[ ${user_choice_2} == "no" ]]; then
+      break
+      fi
+    echo "choose a reaction:"
+
+    done
+
     fi
 
 
