@@ -1,7 +1,7 @@
-issue() {
+react() {
   declare number=$1 content=${2:-}
-  : #${content:? required} ${number:? required}
-  json=$(comment-json "$@")
+  : ${number:? required}
+  json=$(react-json "$@")
   if [[ -z "$content" ]]; then
     ghub repos/lalyos-trainings/git-wed/issues/${number}/reactions | jq .[].content -r
   else
@@ -9,7 +9,7 @@ issue() {
   fi  
 }
 
-comment-json() {
+react-json() {
   cat <<EOF
   {
     "content":"${2}",
