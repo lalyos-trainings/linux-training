@@ -140,6 +140,12 @@ react() {
     else echo "You will see the reactions of issue" ${issue_id}
     fi
 
+    select reaction_t in +1 -1 laugh confused heart hooray rocket eyes
+    do
+    echo "you have chosen ${reaction_t}"
+    break
+    done
+
     echo "This issue with ID ${issue_id} currently has ${react_count} reactions."
     echo "Below is a list of the ${react_count} reactions related to this issue."
     ghub repos/lalyos-trainings/git-wed/issues/${issue_id}/reactions -s | jq .[].content -r
