@@ -178,20 +178,19 @@ EOF
 }
 
 # REACT ISSUE
-reach() {
+reactions() {
     declare issue_id=$1 emoji=$2
 
     if ! emoji ; then
         print_emojis
     fi
 
-    : ${issue_id: required}
-
+    # : ${issue_id: print_emojis}
 
     my_choice=$(read choice)
     
     # ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/89/reactions -X POST -d '{"content": "'${my_choice}'"}'
-    ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/89/reactions -X POST -d '{"content": "heart"}'
+    ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "heart"}'
 }
 
 print_emojis() {
