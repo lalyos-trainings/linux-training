@@ -177,9 +177,12 @@ EOF
     ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${comment_id:-default_id} -X PATCH -d "${my_json}"}
 }
 
+# GLOBALY CHOOSED ITEM
+
 # REACT ISSUE
 reactions() {
     declare issue_id=$1 emoji=$2
+    choosed_item
 
     echo Do you want to check issue\'s emojis "(y/n)"?
     read check_emojis
@@ -206,13 +209,36 @@ reactions() {
 
     if ! [[ ${emoji} ]]; then
 
-        echo Please select an emoji type.
-        select_emojis
+        # echo Please select an emoji type.
+        # select_emojis
+
+        # SELECT
+            emoji_path=/home/robing/emojis.txt
+
+            # CREATE AN ARRAY
+            items=()
+            while read -r line;do
+                items+=(${line})
+                # echo added ${line}
+            done < ${emoji_path}
+
+            echo ${items[0]}
+
+            PS3="Select an item: "
+            select choosed_item in "${items[@]}";do
+                if [[ -n ${choosed_item} ]]; then
+                    echo You selected: ${choosed_item}
+                    ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${choosed_item}'"}' 
+                    echo -e "\nEMOJI ADDED!"
+                else
+                    echo Invalid option
+                fi
+            done
 
         return # TEMP RETURN
         read choice
 
-        ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${choice}'"}'
+        ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${choosed_item}'"}'
         echo -e "\nEMOJI ADDED!"
 
     else
@@ -233,13 +259,23 @@ select_emojis() {
 
     # CREATE AN ARRAY
     items=()
-    while read -r line;
-    do
+    while read -r line;do
         items+=(${line})
         # echo added ${line}
     done < ${emoji_path}
 
     echo ${items[0]}
+
+    PS3="Select an item: "
+    select choosed_item in "${items[@]}";do
+        if [[ -n ${choosed_item} ]]; then
+            echo You selected: ${choosed_item}
+            return
+        else
+            echo Invalid option
+        fi
+    done
+
 
     # cat ${emoji_path} | while read line; do
     #     echo ${line}
