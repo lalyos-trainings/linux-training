@@ -4,7 +4,9 @@
 # GH_TOKEN=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
 
 #too much Bad Credential miatt!
-GH_TOKEN=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
+# GH_TOKEN=ghp_Lr3I8KdorAx94RhyDOVL7JLmnVPSr81G9cdku
+
+GH_TOKEN=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
 
 alias r="source $BASH_SOURCE"
 
@@ -43,8 +45,8 @@ listReactions(){
     # ha nincs id írja ko hogy kötelező!
     declare id=${1:? required}
 
-    # default emo value a -1 (not like)
-    declare emo=${2:-"-1"} 
+    echo Válassz emot "(+1=Like) (-1=Not Like) "\ "ha befejezted ctrl+d" 
+    emo=$(selectEmo)
 
     echo $(getreactions "$id")
 
@@ -58,6 +60,13 @@ listReactions(){
 
 }
 
+selectEmo(){
+    select emo in "+1" "-1" laugh confused heart hooray rocket eyes
+    do
+        echo ${emo}
+    done
+}
+
 getreactions(){
     # listáza ki
     ghub repos/lalyos-trainings/git-wed/issues/$1/reactions -s | jq .[].content > emos.sh
@@ -66,5 +75,5 @@ getreactions(){
 postReaction(){
     #adja hozzá az emo-t
     contenJson=$(addReaction "$2")
-    ghub repos/lalyos-trainings/git-wed/issues/$1/reactions -d "${contenJson}" -s | jq .[] > /dev/null
+    ghub repos/lalyos-trainings/git-wed/issues/$1/reactions -d "${contenJson}" -s | jq .[] >/dev/null
 }
