@@ -1,13 +1,3 @@
-#old=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
-#new=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
-#old=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
-# GH_TOKEN=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
-
-#too much Bad Credential miatt!
-# GH_TOKEN=ghp_Lr3I8KdorAx94RhyDOVL7JLmnVPSr81G9cdku
-
-GH_TOKEN=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
-
 alias r="source $BASH_SOURCE"
 
 ghub() {
@@ -75,5 +65,5 @@ getreactions(){
 postReaction(){
     #adja hozzá az emo-t
     contenJson=$(addReaction "$2")
-    ghub repos/lalyos-trainings/git-wed/issues/$1/reactions -d "${contenJson}" -s | jq .[] >/dev/null
+    ghub repos/lalyos-trainings/git-wed/issues/$1/reactions -d "${contenJson}" -s | jq .[] > /dev/null
 }
