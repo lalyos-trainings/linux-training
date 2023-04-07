@@ -182,7 +182,6 @@ EOF
 # REACT ISSUE
 reactions() {
     declare issue_id=$1 emoji=$2
-    choosed_item
 
     echo Do you want to check issue\'s emojis "(y/n)"?
     read check_emojis
@@ -222,27 +221,32 @@ reactions() {
                 # echo added ${line}
             done < ${emoji_path}
 
-            echo ${items[0]}
+            PS3="Select an item:"
+            select choosed_item in "${items[@]}"; do
+                if [[ ${choosed_item} = "QUIT" ]]; then
+                    echo -e "\nQuitting"
+                    next_step_load
+                    break
 
-            PS3="Select an item: "
-            select choosed_item in "${items[@]}";do
-                if [[ -n ${choosed_item} ]]; then
-                    echo You selected: ${choosed_item}
-                    ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${choosed_item}'"}' 
+                elif [[ -n ${choosed_item} ]]; then
+                    echo -e "You selected:" ${choosed_item}
+                    ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${choosed_item}'"}' > /dev/null 2>&1
                     echo -e "\nEMOJI ADDED!"
                 else
-                    echo Invalid option
+                    echo "Invalid option"
                 fi
             done
+
+
 
         return # TEMP RETURN
         read choice
 
-        ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${choosed_item}'"}'
+        ghub -s -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${choosed_item}'"}' > /dev/null 2>&1
         echo -e "\nEMOJI ADDED!"
 
     else
-        ghub -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${emoji}'"}'
+        ghub -s -L https://api.github.com/repos/lalyos-trainings/git-wed/issues/${issue_id:-89}/reactions -X POST -d '{"content": "'${emoji}'"}'  > /dev/null 2>&1
         echo -e "\nEMOJI ADDED!"
 
     fi
